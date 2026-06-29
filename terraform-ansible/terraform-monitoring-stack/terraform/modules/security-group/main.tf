@@ -62,6 +62,13 @@ resource "aws_security_group" "monitoring" {
   }
 
   ingress {
+    from_port   = 9093
+    to_port     = 9093
+    protocol    = "tcp"
+    cidr_blocks = [var.vpc_cidr]
+  }
+
+  ingress {
     from_port   = var.node_exporter_port
     to_port     = var.node_exporter_port
     protocol    = "tcp"
