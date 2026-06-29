@@ -7,6 +7,12 @@ resource "aws_instance" "bastion" {
 
   vpc_security_group_ids = [var.bastion_sg_id]
 
+  user_data = <<-EOF
+              #!/bin/bash
+              amazon-linux-extras enable python3.8
+              yum install -y python38
+              EOF
+
   tags = merge(var.tags, {
     Name        = var.name
     Role        = "bastion"

@@ -6,6 +6,10 @@ amazon-linux-extras install -y nginx1
 systemctl enable nginx
 systemctl start nginx
 
+# Enable and install python38 to support Ansible execution
+amazon-linux-extras enable python3.8
+yum install -y python38
+
 # Format and mount the extra EBS volume for Prometheus TSDB persistence.
 if [ -b /dev/xvdb ]; then
   if ! blkid /dev/xvdb; then
