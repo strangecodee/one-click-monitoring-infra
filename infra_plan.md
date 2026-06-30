@@ -10,7 +10,7 @@ The objective is to remove previously created AWS resources and then generate a 
 
 ## 2. Destroy previously created AWS resources
 1. Go to the main Terraform directory:
-   - `terraform-ansible/terraform-monitoring-stack/terraform`
+   - `terraform`
 2. Run the exact cleanup commands:
    - `terraform init`
    - `terraform plan -destroy`

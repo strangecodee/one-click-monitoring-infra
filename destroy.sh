@@ -7,8 +7,8 @@ set -e
 # Get script directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-MAIN_TERRAFORM_DIR="${SCRIPT_DIR}/terraform-ansible/terraform-monitoring-stack/terraform"
-BOOTSTRAP_DIR="${SCRIPT_DIR}/terraform-ansible/terraform-monitoring-stack/bootstrap"
+MAIN_TERRAFORM_DIR="${SCRIPT_DIR}/terraform"
+BOOTSTRAP_DIR="${SCRIPT_DIR}/terraform-bootstrap"
 
 echo "=========================================================="
 echo " Starting Full AWS Infrastructure Teardown & Clean"

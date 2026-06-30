@@ -14,7 +14,7 @@ pipeline {
         AWS_ACCESS_KEY_ID     = credentials('aws-credentials-id')
         AWS_SECRET_ACCESS_KEY = credentials('aws-secret-credentials-id')
         AWS_DEFAULT_REGION    = 'ap-south-1'
-        ANSIBLE_DIR           = 'terraform-ansible/ansible-monitoring-stack'
+        ANSIBLE_DIR           = 'ansible'
     }
 
     stages {

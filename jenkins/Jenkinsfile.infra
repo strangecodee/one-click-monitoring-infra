@@ -13,7 +13,7 @@ pipeline {
         AWS_ACCESS_KEY_ID     = credentials('aws-credentials-id')
         AWS_SECRET_ACCESS_KEY = credentials('aws-secret-credentials-id')
         AWS_DEFAULT_REGION    = 'ap-south-1'
-        TF_DIR                = 'terraform-ansible/terraform-monitoring-stack/terraform'
+        TF_DIR                = 'terraform'
     }
 
     stages {
@@ -50,7 +50,7 @@ pipeline {
                         echo "EFS ID: ${efsId}"
                         echo "Triggering downstream Ansible configuration job..."
 
-                        build job: 'Downstream-Ansible-Config', wait: true, parameters: [
+                        build job: 'Service-Configuration', wait: true, parameters: [
                             string(name: 'BASTION_IP', value: bastionIp),
                             string(name: 'EFS_ID', value: efsId),
                             string(name: 'ENVIRONMENT', value: params.ENVIRONMENT),

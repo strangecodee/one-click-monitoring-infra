@@ -1,0 +1,14 @@
+environment             = "dev"
+aws_region              = "ap-south-1"
+key_name                = "assignment-6"
+allowed_ssh_cidr        = "0.0.0.0/0"
+instance_type           = "t3.micro"
+prometheus_port         = 9090
+node_exporter_port      = 9100
+grafana_port            = 3000
+asg_min_size            = 1
+asg_desired_capacity    = 1
+asg_max_size            = 2
+backend_bucket_name     = "monitoring-stack-dev-state"
+backend_lock_table_name = "monitoring-stack-dev-lock"
+project_owner           = "Anurag Maurya"
