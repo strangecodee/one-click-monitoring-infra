@@ -66,6 +66,17 @@
   notify:
     - Restart Grafana
 
+- name: Create Grafana provisioning directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: grafana
+    mode: "0750"
+  loop:
+    - /etc/grafana/provisioning/datasources
+    - /etc/grafana/provisioning/dashboards
+
 - name: Provision Prometheus data source
   ansible.builtin.template:
     src: prometheus_datasource.yml.j2
