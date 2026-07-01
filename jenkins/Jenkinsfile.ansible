@@ -20,7 +20,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                checkoutSCM()
             }
         }
 
@@ -44,22 +44,20 @@ pipeline {
             cleanWs()
         }
         success {
-            script {
-                if (params.NOTIFICATION_EMAIL) {
-                    mail to: params.NOTIFICATION_EMAIL,
-                         subject: "SUCCESS: Jenkins Downstream Job '${env.JOB_NAME}' [Build #${env.BUILD_NUMBER}]",
-                         body: "The Ansible host configuration succeeded!\n\nView details: ${env.BUILD_URL}"
-                }
-            }
+            sendNotification(
+                status: 'SUCCESS',
+                email: params.NOTIFICATION_EMAIL,
+                subject: "SUCCESS: Jenkins Downstream Job '${env.JOB_NAME}' [Build #${env.BUILD_NUMBER}]",
+                body: "The Ansible host configuration succeeded!\n\nView details: ${env.BUILD_URL}"
+            )
         }
         failure {
-            script {
-                if (params.NOTIFICATION_EMAIL) {
-                    mail to: params.NOTIFICATION_EMAIL,
-                         subject: "FAILURE: Jenkins Downstream Job '${env.JOB_NAME}' [Build #${env.BUILD_NUMBER}]",
-                         body: "The Ansible host configuration failed!\n\nView details: ${env.BUILD_URL}"
-                }
-            }
+            sendNotification(
+                status: 'FAILURE',
+                email: params.NOTIFICATION_EMAIL,
+                subject: "FAILURE: Jenkins Downstream Job '${env.JOB_NAME}' [Build #${env.BUILD_NUMBER}]",
+                body: "The Ansible host configuration failed!\n\nView details: ${env.BUILD_URL}"
+            )
         }
     }
 }
