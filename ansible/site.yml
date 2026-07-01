@@ -3,8 +3,11 @@
   gather_facts: false
   tasks:
     - name: Wait for SSH to be responsive
-      wait_for_connection:
-        timeout: 300
+      raw: echo ready
+      register: ssh_check
+      until: ssh_check.rc == 0
+      retries: 30
+      delay: 10
 
     - name: Wait for Python interpreter to be installed and available
       raw: test -f /usr/bin/python3.8
