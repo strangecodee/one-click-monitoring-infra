@@ -24,17 +24,15 @@ pipeline {
             }
         }
 
-        stage('Ansible Host Configuration') {
+        stage('Configure Monitoring Services') {
             steps {
-                script {
-                    runAnsible(
-                        bastionIp: params.BASTION_IP?.trim(),
-                        efsId: params.EFS_ID?.trim(),
-                        environment: params.ENVIRONMENT,
-                        directory: env.ANSIBLE_DIR,
-                        credentialsId: 'aws-ssh-key-id'
-                    )
-                }
+                runAnsible(
+                    bastionIp: params.BASTION_IP?.trim(),
+                    efsId: params.EFS_ID?.trim(),
+                    environment: params.ENVIRONMENT,
+                    directory: env.ANSIBLE_DIR,
+                    credentialsId: 'aws-ssh-key-id'
+                )
             }
         }
     }

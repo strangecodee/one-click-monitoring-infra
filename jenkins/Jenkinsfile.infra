@@ -23,78 +23,38 @@ pipeline {
             }
         }
 
-        stage('Bootstrap Check') {
-            when {
-                expression { params.ACTION == 'apply' }
-            }
+        stage('Bootstrap S3 Backend') {
+            when { expression { params.ACTION == 'apply' } }
             steps {
-                script {
-                    echo "Checking if S3 state backend bucket exists..."
-                    def bucketExists = sh(script: "aws s3api head-bucket --bucket monitoring-stack-dev-state 2>/dev/null", returnStatus: true)
-                    if (bucketExists != 0) {
-                        echo "S3 state backend bucket does not exist. Bootstrapping state and lock resources..."
-                        dir('terraform-bootstrap') {
-                            sh 'terraform init'
-                            sh 'terraform apply -auto-approve'
-                        }
-                        echo "State and lock resources successfully bootstrapped!"
-                    } else {
-                        echo "S3 state backend bucket exists. Proceeding..."
-                    }
-                }
+                bootstrapBackend()
             }
         }
 
-        stage('Terraform Infrastructure Management') {
-            when {
-                expression { params.ACTION == 'apply' }
-            }
+        stage('Provision Infrastructure') {
+            when { expression { params.ACTION == 'apply' } }
             steps {
-                script {
-                    runTerraform(
-                        action: params.ACTION,
-                        environment: params.ENVIRONMENT,
-                        directory: env.TF_DIR
-                    )
-                }
+                runTerraform(
+                    action: params.ACTION,
+                    environment: params.ENVIRONMENT,
+                    directory: env.TF_DIR
+                )
             }
         }
 
-        stage('Trigger Downstream Configuration') {
-            when {
-                expression { params.ACTION == 'apply' }
-            }
+        stage('Configure Application Services') {
+            when { expression { params.ACTION == 'apply' } }
             steps {
-                dir(env.TF_DIR) {
-                    script {
-                        def bastionIp = sh(script: 'terraform output -raw bastion_public_ip', returnStdout: true).trim()
-                        def efsId = sh(script: 'terraform output -raw efs_id', returnStdout: true).trim()
-
-                        echo "Infrastructure provisioned successfully!"
-                        echo "Bastion IP: ${bastionIp}"
-                        echo "EFS ID: ${efsId}"
-                        echo "Triggering downstream Ansible configuration job..."
-
-                        build job: 'Service-Configuration', wait: true, parameters: [
-                            string(name: 'BASTION_IP', value: bastionIp),
-                            string(name: 'EFS_ID', value: efsId),
-                            string(name: 'ENVIRONMENT', value: params.ENVIRONMENT),
-                            string(name: 'NOTIFICATION_EMAIL', value: params.NOTIFICATION_EMAIL)
-                        ]
-                    }
-                }
+                triggerDownstreamConfig(
+                    environment: params.ENVIRONMENT,
+                    notificationEmail: params.NOTIFICATION_EMAIL
+                )
             }
         }
 
-        stage('Complete Infrastructure Teardown') {
-            when {
-                expression { params.ACTION == 'destroy' }
-            }
+        stage('Teardown Infrastructure') {
+            when { expression { params.ACTION == 'destroy' } }
             steps {
-                script {
-                    echo "Starting full AWS infrastructure teardown..."
-                    sh 'bash destroy.sh'
-                }
+                teardownInfra()
             }
         }
     }
