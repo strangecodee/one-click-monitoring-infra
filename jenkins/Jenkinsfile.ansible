@@ -28,7 +28,7 @@ pipeline {
             }
         }
 
-        stage('Diagnostics & Tool Versioning') {
+        stage('Diagnostics') {
             steps {
                 echo "=== Diagnostics & Tool Version Info ==="
                 sh 'ansible --version'
@@ -39,7 +39,7 @@ pipeline {
             }
         }
 
-        stage('Validate Parameters') {
+        stage('Validate') {
             steps {
                 script {
                     echo "Validating input parameters..."
@@ -91,7 +91,7 @@ pipeline {
             }
         }
 
-        stage('Syntax Validation') {
+        stage('Syntax Check') {
             steps {
                 dir(env.ANSIBLE_DIR) {
                     echo "Verifying playbook syntax..."
@@ -100,7 +100,7 @@ pipeline {
             }
         }
 
-        stage('Deploy Observability Stack') {
+        stage('Deploy') {
             steps {
                 dir(env.ANSIBLE_DIR) {
                     echo "Deploying monitoring configuration stack..."

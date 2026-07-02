@@ -27,7 +27,7 @@ pipeline {
             }
         }
 
-        stage('Diagnostics & Tool Versioning') {
+        stage('Diagnostics') {
             steps {
                 echo "=== Diagnostics & Tool Version Info ==="
                 sh 'terraform version'
@@ -36,7 +36,7 @@ pipeline {
             }
         }
 
-        stage('Validate Parameters') {
+        stage('Validate') {
             steps {
                 script {
                     echo "Validating input parameters..."
@@ -51,7 +51,7 @@ pipeline {
             }
         }
 
-        stage('Terraform CI Checks') {
+        stage('CI Checks') {
             steps {
                 echo "Running CI checks for main Terraform configuration..."
                 dir(env.TF_DIR) {
@@ -68,7 +68,7 @@ pipeline {
             }
         }
 
-        stage('Bootstrap S3 Backend') {
+        stage('Bootstrap') {
             when { expression { params.ACTION == 'apply' } }
             steps {
                 withCredentials([
@@ -80,7 +80,7 @@ pipeline {
             }
         }
 
-        stage('Provision Infrastructure') {
+        stage('Deploy') {
             when { expression { params.ACTION == 'apply' } }
             steps {
                 withCredentials([
@@ -96,7 +96,7 @@ pipeline {
             }
         }
 
-        stage('Configure Application Services') {
+        stage('Trigger Downstream') {
             when { expression { params.ACTION == 'apply' } }
             steps {
                 withCredentials([
@@ -111,7 +111,7 @@ pipeline {
             }
         }
 
-        stage('Teardown Infrastructure') {
+        stage('Teardown') {
             when { expression { params.ACTION == 'destroy' } }
             steps {
                 withCredentials([
