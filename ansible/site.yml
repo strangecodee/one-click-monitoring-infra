@@ -60,6 +60,20 @@
   roles:
     - efs
 
+- name: Configure Loki on monitoring nodes
+  hosts: monitoring
+  become: true
+  gather_facts: true
+  roles:
+    - loki
+
+- name: Configure Promtail on monitoring nodes
+  hosts: monitoring
+  become: true
+  gather_facts: true
+  roles:
+    - promtail
+
 - name: Configure Grafana servers
   hosts: monitoring
   become: true

@@ -1,0 +1,63 @@
+---
+- name: Create Promtail directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  loop:
+    - "{{ promtail_config_dir }}"
+    - "{{ promtail_data_dir }}"
+
+- name: Download Promtail
+  ansible.builtin.get_url:
+    url: "{{ promtail_download_url }}"
+    dest: "/tmp/{{ promtail_archive }}"
+    mode: "0644"
+    timeout: 120
+
+- name: Extract Promtail
+  ansible.builtin.unarchive:
+    src: "/tmp/{{ promtail_archive }}"
+    dest: /tmp
+    remote_src: true
+    creates: "/tmp/promtail-linux-amd64"
+
+- name: Install Promtail binary
+  ansible.builtin.copy:
+    src: "/tmp/promtail-linux-amd64"
+    dest: "{{ promtail_install_dir }}/promtail"
+    remote_src: true
+    owner: root
+    group: root
+    mode: "0755"
+  notify:
+    - Restart Promtail
+
+- name: Deploy Promtail configuration
+  ansible.builtin.template:
+    src: promtail.yml.j2
+    dest: "{{ promtail_config_dir }}/promtail.yml"
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Restart Promtail
+
+- name: Create Promtail systemd service
+  ansible.builtin.template:
+    src: promtail.service.j2
+    dest: /etc/systemd/system/promtail.service
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Reload Systemd
+    - Restart Promtail
+
+- name: Enable and start Promtail service
+  ansible.builtin.systemd:
+    name: promtail
+    enabled: true
+    state: started
