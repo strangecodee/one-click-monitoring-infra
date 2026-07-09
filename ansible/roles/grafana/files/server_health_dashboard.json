@@ -84,33 +84,32 @@
       },
       "targets": [
         {
-          "expr": "100 - (avg(rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
-          "legendFormat": "CPU Usage",
+          "expr": "100 - (avg by (instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
+          "legendFormat": "{{instance}} - CPU Usage",
           "instant": true,
           "refId": "A"
         },
         {
-          "expr": "avg((node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100)",
-          "legendFormat": "Memory Usage",
+          "expr": "(node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100",
+          "legendFormat": "{{instance}} - Memory Usage",
           "instant": true,
           "refId": "B"
         },
         {
-          "expr": "avg((node_filesystem_size_bytes{mountpoint=\"/\"} - node_filesystem_free_bytes{mountpoint=\"/\"}) / node_filesystem_size_bytes{mountpoint=\"/\"} * 100)",
-          "legendFormat": "Disk Usage",
+          "expr": "(node_filesystem_size_bytes{mountpoint=\"/\"} - node_filesystem_free_bytes{mountpoint=\"/\"}) / node_filesystem_size_bytes{mountpoint=\"/\"} * 100",
+          "legendFormat": "{{instance}} - Disk Usage",
           "instant": true,
           "refId": "C"
         },
         {
-          "expr": "sum(rate(node_network_receive_bytes_total[5m])) / 1024 / 1024",
-          "legendFormat": "Network Traffic (MB/s)",
+          "expr": "sum by (instance) (rate(node_network_receive_bytes_total[5m])) / 1024 / 1024",
+          "legendFormat": "{{instance}} - Network Traffic (MB/s)",
           "instant": true,
           "refId": "D"
         }
       ],
       "fieldConfig": {
         "defaults": {
-          "unit": "percent",
           "min": 0,
           "max": 100,
           "thresholds": {
@@ -151,7 +150,7 @@
       "targets": [
         {
           "expr": "100 - (rate(node_cpu_seconds_total{mode=\"idle\"}[5m]) * 100)",
-          "legendFormat": "{{instance}}",
+          "legendFormat": "{{instance}} - Core {{cpu}}",
           "range": true,
           "refId": "A"
         }
@@ -231,13 +230,13 @@
       "targets": [
         {
           "expr": "100 - (avg by (instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
-          "legendFormat": "CPU Usage",
+          "legendFormat": "CPU",
           "instant": true,
           "refId": "A"
         },
         {
           "expr": "(node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100",
-          "legendFormat": "Memory Usage",
+          "legendFormat": "Memory",
           "instant": true,
           "refId": "B"
         },
@@ -250,8 +249,10 @@
       ],
       "transformations": [
         {
-          "id": "merge",
-          "options": {}
+          "id": "seriesToColumns",
+          "options": {
+            "byField": "instance"
+          }
         }
       ]
     }
