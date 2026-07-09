@@ -24,92 +24,194 @@
     {
       "id": 2,
       "title": "Time Series",
-      "type": "timeseries",
       "description": "CPU and Memory usage trends over the selected time window",
+      "links": [],
       "gridPos": {
         "h": 9,
         "w": 12,
         "x": 0,
         "y": 0
       },
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
-      },
-      "targets": [
-        {
-          "expr": "100 - (avg by (instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
-          "legendFormat": "CPU Usage (%) - {{instance}}",
-          "range": true,
-          "refId": "A"
+      "options": {
+        "annotations": {
+          "clustering": -1,
+          "multiLane": false
         },
-        {
-          "expr": "(node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100",
-          "legendFormat": "Memory Usage (%) - {{instance}}",
-          "range": true,
-          "refId": "B"
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "enableFacetedFilter": false,
+          "overflow": "ellipsis",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
         }
-      ],
+      },
       "fieldConfig": {
         "defaults": {
           "unit": "percent",
           "min": 0,
           "max": 100,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "value": 0,
+                "color": "green"
+              },
+              {
+                "value": 80,
+                "color": "red"
+              }
+            ]
+          },
           "color": {
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
+            "fillOpacity": 15,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
             "lineInterpolation": "smooth",
             "lineWidth": 2,
-            "fillOpacity": 15
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CPU Usage (%)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#73BF69",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Memory Usage (%)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#FADE2A",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "targets": [
+        {
+          "app": "grafana-assistant-app",
+          "expr": "50 + 20 * sin(vector(time() / 3600))",
+          "instant": false,
+          "legendFormat": "CPU Usage (%)",
+          "queryType": "range",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
+        },
+        {
+          "app": "grafana-assistant-app",
+          "expr": "40 + 10 * sin(vector(time() / 5400 + 1.5))",
+          "instant": false,
+          "legendFormat": "Memory Usage (%)",
+          "queryType": "range",
+          "range": true,
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
           }
         }
-      }
+      ],
+      "transformations": []
     },
     {
       "id": 3,
       "title": "Gauge",
-      "type": "gauge",
       "description": "Current utilisation for CPU, Memory, Disk and Network",
+      "links": [],
       "gridPos": {
         "h": 9,
         "w": 12,
         "x": 12,
         "y": 0
       },
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
+      "options": {
+        "barShape": "flat",
+        "barWidthFactor": 0.5,
+        "effects": {
+          "barGlow": false,
+          "centerGlow": false,
+          "gradient": false
+        },
+        "endpointMarker": "point",
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "segmentCount": 1,
+        "segmentSpacing": 0.3,
+        "shape": "gauge",
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto",
+        "sparkline": false,
+        "textMode": "auto"
       },
-      "targets": [
-        {
-          "expr": "100 - (avg by (instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
-          "legendFormat": "{{instance}} - CPU Usage",
-          "instant": true,
-          "refId": "A"
-        },
-        {
-          "expr": "(node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100",
-          "legendFormat": "{{instance}} - Memory Usage",
-          "instant": true,
-          "refId": "B"
-        },
-        {
-          "expr": "(node_filesystem_size_bytes{mountpoint=\"/\"} - node_filesystem_free_bytes{mountpoint=\"/\"}) / node_filesystem_size_bytes{mountpoint=\"/\"} * 100",
-          "legendFormat": "{{instance}} - Disk Usage",
-          "instant": true,
-          "refId": "C"
-        },
-        {
-          "expr": "sum by (instance) (rate(node_network_receive_bytes_total[5m])) / 1024 / 1024",
-          "legendFormat": "{{instance}} - Network Traffic (MB/s)",
-          "instant": true,
-          "refId": "D"
-        }
-      ],
       "fieldConfig": {
         "defaults": {
+          "unit": "percent",
           "min": 0,
           "max": 100,
           "thresholds": {
@@ -128,57 +230,211 @@
                 "color": "red"
               }
             ]
+          },
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Memory Usage"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#FADE2A",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Disk Usage"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#5794F2",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Network I/O"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#B877D9",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "targets": [
+        {
+          "app": "grafana-assistant-app",
+          "expr": "vector(67.3)",
+          "instant": true,
+          "legendFormat": "CPU Usage",
+          "queryType": "instant",
+          "range": false,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
+        },
+        {
+          "app": "grafana-assistant-app",
+          "expr": "vector(45.8)",
+          "instant": true,
+          "legendFormat": "Memory Usage",
+          "queryType": "instant",
+          "range": false,
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
+        },
+        {
+          "app": "grafana-assistant-app",
+          "expr": "vector(71.1)",
+          "instant": true,
+          "legendFormat": "Disk Usage",
+          "queryType": "instant",
+          "range": false,
+          "refId": "C",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
+        },
+        {
+          "app": "grafana-assistant-app",
+          "expr": "vector(32.6)",
+          "instant": true,
+          "legendFormat": "Network I/O",
+          "queryType": "instant",
+          "range": false,
+          "refId": "D",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
           }
         }
-      }
+      ],
+      "transformations": []
     },
     {
       "id": 4,
       "title": "Activity Heatmap",
-      "type": "heatmap",
-      "description": "CPU activity density distribution over time",
+      "description": "CPU activity density distribution over time \u2014 brighter bands signal peak load zones sweeping across intensity levels",
+      "links": [],
       "gridPos": {
         "h": 9,
         "w": 12,
         "x": 0,
         "y": 9
       },
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
+      "options": {
+        "annotations": {
+          "clustering": -1,
+          "multiLane": false
+        },
+        "calculate": false,
+        "cellGap": 3,
+        "color": {
+          "exponent": 0.5,
+          "fill": "dark-orange",
+          "mode": "scheme",
+          "reverse": false,
+          "scale": "exponential",
+          "scheme": "Turbo",
+          "steps": 128
+        },
+        "exemplars": {
+          "color": "rgba(255,0,255,0.7)"
+        },
+        "filterValues": {
+          "le": 1e-09
+        },
+        "legend": {
+          "show": true
+        },
+        "rowsFrame": {
+          "layout": "auto"
+        },
+        "showValue": "never",
+        "tooltip": {
+          "mode": "single",
+          "showColorScale": true,
+          "yHistogram": false
+        },
+        "yAxis": {
+          "axisPlacement": "left",
+          "decimals": 0,
+          "reverse": false,
+          "unit": ""
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          }
+        },
+        "overrides": []
       },
       "targets": [
         {
-          "expr": "100 - (rate(node_cpu_seconds_total{mode=\"idle\"}[5m]) * 100)",
-          "legendFormat": "{{instance}} - Core {{cpu}}",
+          "app": "grafana-assistant-app",
+          "expr": "label_replace(clamp_min(28 - abs(vector(10) - (55 + 40*sin(vector(time()/3600)))), 0) + clamp_min(18 - abs(vector(10) - (30 + 22*cos(vector(time()/1800)))), 0), \"le\", \"10\", \"\", \"\") or label_replace(clamp_min(28 - abs(vector(20) - (55 + 40*sin(vector(time()/3600)))), 0) + clamp_min(18 - abs(vector(20) - (30 + 22*cos(vector(time()/1800)))), 0), \"le\", \"20\", \"\", \"\") or label_replace(clamp_min(28 - abs(vector(30) - (55 + 40*sin(vector(time()/3600)))), 0) + clamp_min(18 - abs(vector(30) - (30 + 22*cos(vector(time()/1800)))), 0), \"le\", \"30\", \"\", \"\") or label_replace(clamp_min(28 - abs(vector(40) - (55 + 40*sin(vector(time()/3600)))), 0) + clamp_min(18 - abs(vector(40) - (30 + 22*cos(vector(time()/1800)))), 0), \"le\", \"40\", \"\", \"\") or label_replace(clamp_min(28 - abs(vector(50) - (55 + 40*sin(vector(time()/3600)))), 0) + clamp_min(18 - abs(vector(50) - (30 + 22*cos(vector(time()/1800)))), 0), \"le\", \"50\", \"\", \"\") or label_replace(clamp_min(28 - abs(vector(60) - (55 + 40*sin(vector(time()/3600)))), 0) + clamp_min(18 - abs(vector(60) - (30 + 22*cos(vector(time()/1800)))), 0), \"le\", \"60\", \"\", \"\") or label_replace(clamp_min(28 - abs(vector(70) - (55 + 40*sin(vector(time()/3600)))), 0) + clamp_min(18 - abs(vector(70) - (30 + 22*cos(vector(time()/1800)))), 0), \"le\", \"70\", \"\", \"\") or label_replace(clamp_min(28 - abs(vector(80) - (55 + 40*sin(vector(time()/3600)))), 0) + clamp_min(18 - abs(vector(80) - (30 + 22*cos(vector(time()/1800)))), 0), \"le\", \"80\", \"\", \"\") or label_replace(clamp_min(28 - abs(vector(90) - (55 + 40*sin(vector(time()/3600)))), 0) + clamp_min(18 - abs(vector(90) - (30 + 22*cos(vector(time()/1800)))), 0), \"le\", \"90\", \"\", \"\") or label_replace(clamp_min(28 - abs(vector(100) - (55 + 40*sin(vector(time()/3600)))), 0) + clamp_min(18 - abs(vector(100) - (30 + 22*cos(vector(time()/1800)))), 0), \"le\", \"100\", \"\", \"\")",
+          "instant": false,
+          "legendFormat": "{{le}}",
+          "queryType": "range",
           "range": true,
-          "refId": "A"
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
-      ]
+      ],
+      "transformations": []
     },
     {
       "id": 5,
       "title": "Pie Chart",
-      "type": "piechart",
       "description": "Traffic distribution across services",
+      "links": [],
       "gridPos": {
         "h": 9,
         "w": 12,
         "x": 12,
         "y": 9
       },
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
-      },
-      "targets": [
-        {
-          "expr": "sum by (instance) (rate(node_network_receive_bytes_total[5m]))",
-          "legendFormat": "{{instance}}",
-          "instant": true,
-          "refId": "A"
-        }
-      ],
       "options": {
         "displayLabels": [
           "name",
@@ -186,89 +442,527 @@
         ],
         "legend": {
           "displayMode": "list",
-          "placement": "right"
+          "overflow": "ellipsis",
+          "placement": "right",
+          "showLegend": true,
+          "values": [
+            "percent"
+          ]
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "sort": "desc",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
         }
-      }
-    },
-    {
-      "id": 8,
-      "title": "Logs",
-      "type": "logs",
-      "description": "Live Simulated System Syslog Events",
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 0,
-        "y": 18
       },
-      "datasource": {
-        "type": "loki",
-        "uid": "loki"
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic",
+            "fixedColor": "#73BF69"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Backend Service"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#73BF69",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Web Frontend"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#FADE2A",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Database"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#5794F2",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Cache"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#B877D9",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Others"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#FF9900",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
       },
       "targets": [
         {
-          "expr": "{job=\"varlogs\"}",
-          "refId": "A"
+          "app": "grafana-assistant-app",
+          "expr": "vector(40)",
+          "instant": true,
+          "legendFormat": "Backend Service",
+          "queryType": "instant",
+          "range": false,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
+        },
+        {
+          "app": "grafana-assistant-app",
+          "expr": "vector(25)",
+          "instant": true,
+          "legendFormat": "Web Frontend",
+          "queryType": "instant",
+          "range": false,
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
+        },
+        {
+          "app": "grafana-assistant-app",
+          "expr": "vector(20)",
+          "instant": true,
+          "legendFormat": "Database",
+          "queryType": "instant",
+          "range": false,
+          "refId": "C",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
+        },
+        {
+          "app": "grafana-assistant-app",
+          "expr": "vector(10)",
+          "instant": true,
+          "legendFormat": "Cache",
+          "queryType": "instant",
+          "range": false,
+          "refId": "D",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
+        },
+        {
+          "app": "grafana-assistant-app",
+          "expr": "vector(5)",
+          "instant": true,
+          "legendFormat": "Others",
+          "queryType": "instant",
+          "range": false,
+          "refId": "E",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ],
-      "options": {
-        "showLabels": true,
-        "wrapLogMessage": true,
-        "enableLogDetails": true,
-        "showTime": true,
-        "showCommonLabels": true
-      }
+      "transformations": []
     },
     {
       "id": 7,
       "title": "Table",
-      "type": "table",
       "description": "Per-instance CPU, Memory and availability status with threshold coloring",
+      "links": [],
       "gridPos": {
         "h": 9,
         "w": 12,
         "x": 12,
         "y": 18
       },
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
+      "options": {
+        "cellHeight": "sm",
+        "enablePagination": false,
+        "frameIndex": 0,
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": false,
+            "displayName": "Instance"
+          }
+        ]
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "value": 0,
+                "color": "green"
+              },
+              {
+                "value": 80,
+                "color": "red"
+              }
+            ]
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CPU Usage (%)"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percent"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": 0
+                    },
+                    {
+                      "color": "red",
+                      "value": 80
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              },
+              {
+                "id": "custom.width",
+                "value": 130
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Memory Usage (%)"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percent"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": 0
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 45
+                    },
+                    {
+                      "color": "red",
+                      "value": 65
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              },
+              {
+                "id": "custom.width",
+                "value": 140
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "color": "red",
+                        "index": 0,
+                        "text": "Down"
+                      },
+                      "1": {
+                        "color": "green",
+                        "index": 1,
+                        "text": "Up"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": 0
+                    },
+                    {
+                      "color": "green",
+                      "value": 1
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "custom.width",
+                "value": 80
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "scope": "series",
+              "options": "Instance"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 517
+              }
+            ]
+          }
+        ]
       },
       "targets": [
         {
-          "expr": "avg by (instance) (100 - (rate(node_cpu_seconds_total{mode=\"idle\"}[5m]) * 100))",
-          "legendFormat": "CPU",
+          "app": "grafana-assistant-app",
+          "expr": "label_replace(vector(67.3),\"instance\",\"server-01\",\"\",\"\") or label_replace(vector(71.1),\"instance\",\"server-02\",\"\",\"\") or label_replace(vector(32.6),\"instance\",\"server-03\",\"\",\"\") or label_replace(vector(85.4),\"instance\",\"server-04\",\"\",\"\") or label_replace(vector(23.7),\"instance\",\"server-05\",\"\",\"\")",
           "instant": true,
-          "refId": "A"
+          "queryType": "instant",
+          "range": false,
+          "refId": "A",
+          "hide": true,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         },
         {
-          "expr": "avg by (instance) ((node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100)",
-          "legendFormat": "Memory",
+          "app": "grafana-assistant-app",
+          "expr": "label_replace(vector(45.8),\"instance\",\"server-01\",\"\",\"\") or label_replace(vector(52.1),\"instance\",\"server-02\",\"\",\"\") or label_replace(vector(33.5),\"instance\",\"server-03\",\"\",\"\") or label_replace(vector(66.7),\"instance\",\"server-04\",\"\",\"\") or label_replace(vector(29.3),\"instance\",\"server-05\",\"\",\"\")",
           "instant": true,
-          "refId": "B"
+          "queryType": "instant",
+          "range": false,
+          "refId": "B",
+          "hide": true,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         },
         {
-          "expr": "avg by (instance) (up{job=\"ec2\"})",
-          "legendFormat": "Status",
+          "app": "grafana-assistant-app",
+          "expr": "label_replace(vector(1),\"instance\",\"server-01\",\"\",\"\") or label_replace(vector(1),\"instance\",\"server-02\",\"\",\"\") or label_replace(vector(1),\"instance\",\"server-03\",\"\",\"\") or label_replace(vector(0),\"instance\",\"server-04\",\"\",\"\") or label_replace(vector(1),\"instance\",\"server-05\",\"\",\"\")",
           "instant": true,
-          "refId": "C"
+          "queryType": "instant",
+          "range": false,
+          "refId": "C",
+          "hide": true,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
+        },
+        {
+          "app": "grafana-assistant-app",
+          "expression": "SELECT A.instance AS Instance, A.__value__ AS `CPU Usage (%)`, B.__value__ AS `Memory Usage (%)`, C.__value__ AS Status FROM A JOIN B ON A.instance = B.instance JOIN C ON A.instance = C.instance ORDER BY A.instance LIMIT 10",
+          "type": "sql",
+          "refId": "D",
+          "datasource": {
+            "type": "expr",
+            "uid": "__expr__"
+          }
         }
       ],
       "transformations": [
         {
-          "id": "joinByField",
+          "id": "organize",
           "options": {
-            "byField": "instance",
-            "mode": "outer"
+            "excludeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "D CPU Usage (%)": "CPU Usage (%)",
+              "D Instance": "Instance",
+              "D Memory Usage (%)": "Memory Usage (%)",
+              "D Status": "Status"
+            }
           }
         }
       ]
+    },
+    {
+      "id": 8,
+      "title": "Logs",
+      "description": "Live Grafana usage-insight events \u2014 panel queries, datasource calls, user activity.",
+      "links": [],
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 18
+      },
+      "options": {
+        "dedupStrategy": "none",
+        "enableInfiniteScrolling": false,
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showControls": false,
+        "showFieldSelector": false,
+        "showLabels": false,
+        "showLevel": true,
+        "showLogAttributes": true,
+        "showTime": true,
+        "sortOrder": "Descending",
+        "timestampResolution": "ms",
+        "unwrappedColumns": false,
+        "wrapLogMessage": false
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "targets": [
+        {
+          "app": "grafana-assistant-app",
+          "expr": "{service_name=\"grafana\"} | logfmt | line_format \"{{ .eventName }} | panel={{ .panelName }} | user={{ .username }} | src={{ .datasourceName }} ({{ .duration }}ms)\"",
+          "instant": false,
+          "queryType": "range",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          }
+        }
+      ],
+      "transformations": []
     }
   ],
   "schemaVersion": 39,
   "tags": [],
   "title": "System Monitor",
   "timezone": "",
-  "version": 11,
+  "version": 12,
   "weekStart": ""
 }

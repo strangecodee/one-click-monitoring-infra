@@ -1,0 +1,12 @@
+[Unit]
+Description=Mock Grafana Log Generator for Loki Scrapes
+After=network.target
+
+[Service]
+Type=simple
+User=root
+ExecStart=/usr/bin/python3 /usr/local/bin/mock_log_generator.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

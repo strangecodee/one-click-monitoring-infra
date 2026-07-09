@@ -61,3 +61,30 @@
     name: promtail
     enabled: true
     state: started
+
+- name: Deploy mock log generator script
+  ansible.builtin.template:
+    src: mock_log_generator.py.j2
+    dest: /usr/local/bin/mock_log_generator.py
+    owner: root
+    group: root
+    mode: "0755"
+  notify:
+    - Restart mock log generator
+
+- name: Deploy mock log generator service
+  ansible.builtin.template:
+    src: mock_log_generator.service.j2
+    dest: /etc/systemd/system/mock_log_generator.service
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Reload Systemd
+    - Restart mock log generator
+
+- name: Enable and start mock log generator service
+  ansible.builtin.systemd:
+    name: mock_log_generator
+    enabled: true
+    state: started

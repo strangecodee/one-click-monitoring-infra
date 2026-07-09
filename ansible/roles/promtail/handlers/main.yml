@@ -7,3 +7,8 @@
   ansible.builtin.systemd:
     name: promtail
     state: restarted
+
+- name: Restart mock log generator
+  ansible.builtin.systemd:
+    name: mock_log_generator
+    state: restarted

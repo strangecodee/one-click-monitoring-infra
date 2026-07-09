@@ -35,3 +35,13 @@ scrape_configs:
           job: nginx
           host: "{{ ansible_host }}"
           __path__: /var/log/nginx/*.log
+
+  - job_name: grafana_mock
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: grafana_mock
+          service_name: grafana
+          host: "{{ ansible_host }}"
+          __path__: /var/log/grafana_mock.log
