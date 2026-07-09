@@ -194,7 +194,7 @@
       "id": 8,
       "title": "Logs",
       "type": "logs",
-      "description": "Live System Syslog Events",
+      "description": "Live Simulated System Syslog Events",
       "gridPos": {
         "h": 9,
         "w": 12,
@@ -202,15 +202,23 @@
         "y": 18
       },
       "datasource": {
-        "type": "loki",
-        "uid": "loki"
+        "type": "testdata",
+        "uid": "grafana"
       },
       "targets": [
         {
-          "expr": "{job=\"system\"}",
-          "refId": "A"
+          "refId": "A",
+          "scenarioId": "log_lines",
+          "stringInput": "syslog"
         }
-      ]
+      ],
+      "options": {
+        "showLabels": true,
+        "wrapLogMessage": true,
+        "enableLogDetails": true,
+        "showTime": true,
+        "showCommonLabels": true
+      }
     },
     {
       "id": 7,
@@ -229,19 +237,19 @@
       },
       "targets": [
         {
-          "expr": "100 - (avg by (instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
+          "expr": "avg by (instance) (100 - (rate(node_cpu_seconds_total{mode=\"idle\"}[5m]) * 100))",
           "legendFormat": "CPU",
           "instant": true,
           "refId": "A"
         },
         {
-          "expr": "(node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100",
+          "expr": "avg by (instance) ((node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100)",
           "legendFormat": "Memory",
           "instant": true,
           "refId": "B"
         },
         {
-          "expr": "up",
+          "expr": "avg by (instance) (up{job=\"node_exporter\"})",
           "legendFormat": "Status",
           "instant": true,
           "refId": "C"
@@ -249,9 +257,10 @@
       ],
       "transformations": [
         {
-          "id": "seriesToColumns",
+          "id": "joinByField",
           "options": {
-            "byField": "instance"
+            "byField": "instance",
+            "mode": "outer"
           }
         }
       ]
