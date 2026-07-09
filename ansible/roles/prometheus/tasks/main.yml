@@ -31,6 +31,7 @@
     url: "{{ prometheus_download_url }}"
     dest: "/tmp/{{ prometheus_archive }}"
     mode: "0644"
+    timeout: 120
 
 - name: Extract Prometheus
   ansible.builtin.unarchive:

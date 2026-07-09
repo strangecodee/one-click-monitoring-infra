@@ -19,6 +19,7 @@
     url: "{{ node_exporter_download_url }}"
     dest: "/tmp/{{ node_exporter_archive }}"
     mode: "0644"
+    timeout: 120
 
 - name: Create Node Exporter install directory
   ansible.builtin.file:

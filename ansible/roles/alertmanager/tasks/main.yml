@@ -31,6 +31,7 @@
     url: "{{ alertmanager_download_url }}"
     dest: "/tmp/{{ alertmanager_archive }}"
     mode: "0644"
+    timeout: 120
 
 - name: Extract Alertmanager
   ansible.builtin.unarchive:
