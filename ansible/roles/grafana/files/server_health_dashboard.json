@@ -856,7 +856,6 @@
           "queryType": "instant",
           "range": false,
           "refId": "A",
-          "hide": true,
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus"
@@ -869,7 +868,6 @@
           "queryType": "instant",
           "range": false,
           "refId": "B",
-          "hide": true,
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus"
@@ -882,34 +880,38 @@
           "queryType": "instant",
           "range": false,
           "refId": "C",
-          "hide": true,
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus"
-          }
-        },
-        {
-          "app": "grafana-assistant-app",
-          "expression": "SELECT A.instance AS Instance, A.__value__ AS `CPU Usage (%)`, B.__value__ AS `Memory Usage (%)`, C.__value__ AS Status FROM A JOIN B ON A.instance = B.instance JOIN C ON A.instance = C.instance ORDER BY A.instance LIMIT 10",
-          "type": "sql",
-          "refId": "D",
-          "datasource": {
-            "type": "expr",
-            "uid": "__expr__"
           }
         }
       ],
       "transformations": [
         {
+          "id": "joinByField",
+          "options": {
+            "byField": "instance",
+            "mode": "outer"
+          }
+        },
+        {
           "id": "organize",
           "options": {
-            "excludeByName": {},
+            "excludeByName": {
+              "Time": true,
+              "Time #A": true,
+              "Time #B": true,
+              "Time #C": true
+            },
             "indexByName": {},
             "renameByName": {
-              "D CPU Usage (%)": "CPU Usage (%)",
-              "D Instance": "Instance",
-              "D Memory Usage (%)": "Memory Usage (%)",
-              "D Status": "Status"
+              "instance": "Instance",
+              "Value #A": "CPU Usage (%)",
+              "Value #B": "Memory Usage (%)",
+              "Value #C": "Status",
+              "Value (A)": "CPU Usage (%)",
+              "Value (B)": "Memory Usage (%)",
+              "Value (C)": "Status"
             }
           }
         }
