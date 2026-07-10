@@ -853,6 +853,7 @@
           "app": "grafana-assistant-app",
           "expr": "label_replace(vector(67.3),\"instance\",\"server-01\",\"\",\"\") or label_replace(vector(71.1),\"instance\",\"server-02\",\"\",\"\") or label_replace(vector(32.6),\"instance\",\"server-03\",\"\",\"\") or label_replace(vector(85.4),\"instance\",\"server-04\",\"\",\"\") or label_replace(vector(23.7),\"instance\",\"server-05\",\"\",\"\")",
           "instant": true,
+          "legendFormat": "CPU Usage (%)",
           "queryType": "instant",
           "range": false,
           "refId": "A",
@@ -865,6 +866,7 @@
           "app": "grafana-assistant-app",
           "expr": "label_replace(vector(45.8),\"instance\",\"server-01\",\"\",\"\") or label_replace(vector(52.1),\"instance\",\"server-02\",\"\",\"\") or label_replace(vector(33.5),\"instance\",\"server-03\",\"\",\"\") or label_replace(vector(66.7),\"instance\",\"server-04\",\"\",\"\") or label_replace(vector(29.3),\"instance\",\"server-05\",\"\",\"\")",
           "instant": true,
+          "legendFormat": "Memory Usage (%)",
           "queryType": "instant",
           "range": false,
           "refId": "B",
@@ -877,6 +879,7 @@
           "app": "grafana-assistant-app",
           "expr": "label_replace(vector(1),\"instance\",\"server-01\",\"\",\"\") or label_replace(vector(1),\"instance\",\"server-02\",\"\",\"\") or label_replace(vector(1),\"instance\",\"server-03\",\"\",\"\") or label_replace(vector(0),\"instance\",\"server-04\",\"\",\"\") or label_replace(vector(1),\"instance\",\"server-05\",\"\",\"\")",
           "instant": true,
+          "legendFormat": "Status",
           "queryType": "instant",
           "range": false,
           "refId": "C",
@@ -911,7 +914,10 @@
               "Value #C": "Status",
               "Value (A)": "CPU Usage (%)",
               "Value (B)": "Memory Usage (%)",
-              "Value (C)": "Status"
+              "Value (C)": "Status",
+              "CPU Usage (%)": "CPU Usage (%)",
+              "Memory Usage (%)": "Memory Usage (%)",
+              "Status": "Status"
             }
           }
         }
