@@ -8,3 +8,5 @@ grafana_efs_file_system_id: ""
 grafana_user: grafana
 grafana_group: grafana
 grafana_config_file: /etc/grafana/grafana.ini
+grafana_local_db_dir: /var/lib/grafana-local
+grafana_local_db_path: "{{ grafana_local_db_dir }}/grafana.db"

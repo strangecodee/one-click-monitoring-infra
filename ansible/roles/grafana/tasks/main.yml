@@ -58,7 +58,7 @@
 
 - name: Create local Grafana database directory
   ansible.builtin.file:
-    path: /var/lib/grafana-local
+    path: "{{ grafana_local_db_dir }}"
     state: directory
     owner: grafana
     group: grafana
