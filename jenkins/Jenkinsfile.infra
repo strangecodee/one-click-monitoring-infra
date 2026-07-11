@@ -132,25 +132,22 @@ pipeline {
             sendNotification(
                 status: 'SUCCESS',
                 email: params.NOTIFICATION_EMAIL,
-                subject: "SUCCESS: Provision Monitoring Infrastructure [Build #${env.BUILD_NUMBER}]",
-                body: """Dear Team,
+                subject: "[SUCCESS] Build #${env.BUILD_NUMBER}: Monitoring infrastructure provisioned on dev",
+                body: """Hi team,
 
-We are pleased to inform you that the monitoring and observability infrastructure has been successfully provisioned/updated.
+Build #${env.BUILD_NUMBER} for the Monitoring Infrastructure completed successfully.
 
-Provisioning Details:
----------------------
-- Action: ${params.ACTION.toUpperCase()}
-- Environment: ${params.ENVIRONMENT.toUpperCase()}
-- Jenkins Job: ${env.JOB_NAME}
-- Build Number: #${env.BUILD_NUMBER}
+Deploy Details:
+- Action: ${params.ACTION}
+- Environment: ${params.ENVIRONMENT}
 
-The downstream configuration pipeline ('Service-Configuration') has been triggered automatically to install and configure all application services (Prometheus, Alertmanager, Grafana).
+The configuration pipeline has been triggered downstream to configure all services (Prometheus, Alertmanager, Grafana).
 
-To view the detailed Jenkins execution logs, please visit:
-${env.BUILD_URL}
+URLs:
+- Jenkins Build Logs: ${env.BUILD_URL}
 
-Best Regards,
-Jenkins Observability Pipeline
+Thanks,
+Anurag
 """
             )
         }
@@ -158,23 +155,20 @@ Jenkins Observability Pipeline
             sendNotification(
                 status: 'FAILURE',
                 email: params.NOTIFICATION_EMAIL,
-                subject: "FAILURE: Provision Monitoring Infrastructure [Build #${env.BUILD_NUMBER}]",
-                body: """Dear Team,
+                subject: "[FAILURE] Build #${env.BUILD_NUMBER}: Monitoring infrastructure provisioning failed on dev",
+                body: """Hi team,
 
-We regret to inform you that the monitoring and observability infrastructure provisioning has failed.
+Build #${env.BUILD_NUMBER} for the Monitoring Infrastructure has failed.
 
-Provisioning Details:
----------------------
-- Action: ${params.ACTION.toUpperCase()}
-- Environment: ${params.ENVIRONMENT.toUpperCase()}
-- Jenkins Job: ${env.JOB_NAME}
-- Build Number: #${env.BUILD_NUMBER}
+Deploy Details:
+- Action: ${params.ACTION}
+- Environment: ${params.ENVIRONMENT}
 
-Please review the build execution logs to diagnose and resolve the issue:
-${env.BUILD_URL}
+Please check the build logs to troubleshoot:
+- Jenkins Build Logs: ${env.BUILD_URL}
 
-Best Regards,
-Jenkins Observability Pipeline
+Thanks,
+Anurag
 """
             )
         }
