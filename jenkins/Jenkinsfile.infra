@@ -41,8 +41,7 @@ pipeline {
                 script {
                     echo "Validating input parameters..."
                     if (params.NOTIFICATION_EMAIL && params.NOTIFICATION_EMAIL.trim() != "") {
-                        def emailPattern = ~/^([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+)\.([a-zA-Z]{2,})$/
-                        if (!(params.NOTIFICATION_EMAIL.trim() =~ emailPattern)) {
+                        if (!params.NOTIFICATION_EMAIL.trim().matches('^([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+)\\.([a-zA-Z]{2,})$')) {
                             error "Validation Failed: NOTIFICATION_EMAIL '${params.NOTIFICATION_EMAIL}' is not a valid format."
                         }
                     }
