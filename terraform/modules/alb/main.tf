@@ -31,6 +31,12 @@ resource "aws_lb_target_group" "grafana" {
     matcher             = "200-399"
   }
 
+  stickiness {
+    type            = "lb_cookie"
+    cookie_duration = 86400
+    enabled         = true
+  }
+
   tags = merge(var.tags, {
     Name = "${var.name}-tg"
   })

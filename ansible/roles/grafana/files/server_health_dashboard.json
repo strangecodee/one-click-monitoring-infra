@@ -853,6 +853,7 @@
           "app": "grafana-assistant-app",
           "expr": "label_replace(vector(67.3),\"instance\",\"server-01\",\"\",\"\") or label_replace(vector(71.1),\"instance\",\"server-02\",\"\",\"\") or label_replace(vector(32.6),\"instance\",\"server-03\",\"\",\"\") or label_replace(vector(85.4),\"instance\",\"server-04\",\"\",\"\") or label_replace(vector(23.7),\"instance\",\"server-05\",\"\",\"\")",
           "instant": true,
+          "format": "table",
           "legendFormat": "CPU Usage (%)",
           "queryType": "instant",
           "range": false,
@@ -866,6 +867,7 @@
           "app": "grafana-assistant-app",
           "expr": "label_replace(vector(45.8),\"instance\",\"server-01\",\"\",\"\") or label_replace(vector(52.1),\"instance\",\"server-02\",\"\",\"\") or label_replace(vector(33.5),\"instance\",\"server-03\",\"\",\"\") or label_replace(vector(66.7),\"instance\",\"server-04\",\"\",\"\") or label_replace(vector(29.3),\"instance\",\"server-05\",\"\",\"\")",
           "instant": true,
+          "format": "table",
           "legendFormat": "Memory Usage (%)",
           "queryType": "instant",
           "range": false,
@@ -879,6 +881,7 @@
           "app": "grafana-assistant-app",
           "expr": "label_replace(vector(1),\"instance\",\"server-01\",\"\",\"\") or label_replace(vector(1),\"instance\",\"server-02\",\"\",\"\") or label_replace(vector(1),\"instance\",\"server-03\",\"\",\"\") or label_replace(vector(0),\"instance\",\"server-04\",\"\",\"\") or label_replace(vector(1),\"instance\",\"server-05\",\"\",\"\")",
           "instant": true,
+          "format": "table",
           "legendFormat": "Status",
           "queryType": "instant",
           "range": false,
@@ -978,5 +981,6 @@
   "title": "System Monitor",
   "timezone": "",
   "version": 12,
-  "weekStart": ""
+  "weekStart": "",
+  "uid": "6301b914-bde2-4c25-bb3b-316a75f1b69f"
 }
