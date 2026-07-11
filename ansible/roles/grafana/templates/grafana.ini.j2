@@ -10,3 +10,7 @@ http_port = {{ grafana_port }}
 [security]
 admin_user = {{ grafana_admin_user }}
 admin_password = {{ grafana_admin_password }}
+
+[database]
+type = sqlite3
+path = /var/lib/grafana-local/grafana.db
