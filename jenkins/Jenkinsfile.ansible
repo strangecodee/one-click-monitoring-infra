@@ -139,21 +139,19 @@ pipeline {
                 sendNotification(
                     status: 'SUCCESS',
                     email: params.NOTIFICATION_EMAIL,
-                    subject: "[SUCCESS] Build #${env.BUILD_NUMBER}: Observability stack deployed on dev",
-                    body: """Hi team,
+                    subject: "[SUCCESS] Observability stack deployed - Build #${env.BUILD_NUMBER}",
+                    body: """Hi Team,
 
-Build #${env.BUILD_NUMBER} for the Observability Stack has finished successfully.
+Build #${env.BUILD_NUMBER} for the Observability Stack (dev environment) completed successfully.
 
-Deploy Details:
+Deploy Summary:
 - Environment: ${params.ENVIRONMENT}
 - Bastion IP: ${params.BASTION_IP}
 - EFS ID: ${params.EFS_ID}
 - Grafana Portal: ${grafanaUrl}
-- Action: config
 
-URLs:
-- Grafana: ${grafanaUrl}
-- Jenkins Build Logs: ${env.BUILD_URL}
+To check the build logs, visit:
+${env.BUILD_URL}
 
 Thanks,
 Anurag
@@ -165,19 +163,18 @@ Anurag
             sendNotification(
                 status: 'FAILURE',
                 email: params.NOTIFICATION_EMAIL,
-                subject: "[FAILURE] Build #${env.BUILD_NUMBER}: Observability stack deployment failed on dev",
-                body: """Hi team,
+                subject: "[FAILURE] Observability stack deployment failed - Build #${env.BUILD_NUMBER}",
+                body: """Hi Team,
 
-Build #${env.BUILD_NUMBER} for the Observability Stack has failed.
+Build #${env.BUILD_NUMBER} for the Observability Stack (dev environment) failed.
 
-Deploy Details:
+Deploy Summary:
 - Environment: ${params.ENVIRONMENT}
 - Bastion IP: ${params.BASTION_IP}
 - EFS ID: ${params.EFS_ID}
-- Action: config
 
-Please check the build logs to troubleshoot:
-- Jenkins Build Logs: ${env.BUILD_URL}
+To view the build logs and investigate, visit:
+${env.BUILD_URL}
 
 Thanks,
 Anurag
